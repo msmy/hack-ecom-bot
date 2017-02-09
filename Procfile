@@ -1,1 +1,1 @@
-web: bin/hubot -a twitter
+web: bin/hubot -a messenger-bot
