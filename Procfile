@@ -1,1 +1,1 @@
-web: bin/hubot -a messenger-bot
+app: bin/hubot -a messenger-bot
