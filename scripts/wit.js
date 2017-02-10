@@ -19,6 +19,11 @@ const speeds = {
   }
 };
 
+const schedule = {
+    'game of thrones': '28th July',
+    'the walking dead': '1st April at 7pm'
+};
+
 const actions = {
     send(request, response) {
 
@@ -37,6 +42,23 @@ const actions = {
             if ( entities.contact ) {
                 context.name = entities.contact[0].value;
             }
+
+            return resolve(context);
+        });
+    },
+    getSchedule({context, entities}) {
+        return new Promise(function(resolve) {
+            //res object is attached to the sessionId
+
+            const content = entities.content[0].value;
+            const response = schedule[content];
+
+            if ( response ) {
+                context.response = response;
+            } else {
+                context.response = 'Its not on till later this year!';
+            }
+
 
             return resolve(context);
         });
