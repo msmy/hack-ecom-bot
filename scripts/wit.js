@@ -2,20 +2,24 @@
 
 const witHelper = require('hubot-wit-helper');
 
-const WIT_TOKEN = 'AUGKNTA4PRJTXBW2EDFXPOXIDCDLM7KJ';
+const WIT_TOKEN = '5PYEZJD6LFDYPLH6E6GARLHTZQUKMGD4';
+
+const speeds = {
+  'TW7 2HD': {
+      speed: '10',
+      town: 'London'
+  },
+  'IP11 9ER': {
+      speed: '80',
+      town: 'Ipswich'
+  },
+  'TW9 2HD': {
+      speed: '22',
+      town: 'Richmond'
+  }
+};
+
 const actions = {
-    say(session, context, message, cb) {
-        //res object is attached to the session
-        // session.res.reply(message);
-        cb();
-    },
-    merge(session, context, entities, message, cb) {
-        cb(context);
-    },
-    error(session, context, error) {
-        console.error(error.message);
-        session.res.send('Something went wrong with Wit.ai');
-    },
     send(request, response) {
 
         const { sessionId } = request;
@@ -29,7 +33,12 @@ const actions = {
     sendHi({context, entities}) {
         return new Promise(function(resolve) {
             //res object is attached to the sessionId
-            return resolve();
+
+            if ( entities.contact ) {
+                context.name = entities.contact[0].value;
+            }
+
+            return resolve(context);
         });
     },
     getForecast({context, entities}) {
@@ -53,8 +62,11 @@ const actions = {
         return new Promise((resolve) => {
 
             if ( entities.location ) {
-                context.town = 'london';
-                context.speed = '80 Mb/s';
+
+                const data = speeds[entities.location[0].value] || speeds['TW9 2HD'];
+
+                context.town = data.town;
+                context.speed = data.speed + ' Mb/s';
                 context.postcode = encodeURIComponent(entities.location[0].value);
                 delete context.missingPostcode;
             } else {
@@ -66,8 +78,8 @@ const actions = {
     }
 };
 const bot = (robot) => {
-    const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot, new witHelper.log.Logger(witHelper.log.DEBUG));
-    // const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot);
+    // const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot, new witHelper.log.Logger(witHelper.log.DEBUG));
+    const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot);
 
     witRobot.respond(/(.*)/gi, (err, context, res) => {
         console.log(`[USER] ${witRobot.getMsg(res)}`);
