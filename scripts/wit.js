@@ -38,8 +38,8 @@ const actions = {
         });
     },
     getForecast({context, entities}) {
-        console.log('entities', entities);
-        console.log('cotext', context);
+        //console.log('entities', entities);
+        //console.log('cotext', context);
         return new Promise((resolve) => {
 
             if ( entities.location ) {
@@ -51,10 +51,28 @@ const actions = {
 
             return resolve(context);
         });
+    },
+    getSpeeds({context, entities}) {
+       // console.log('entities', entities);
+       // console.log('cotext', context);
+        return new Promise((resolve) => {
+
+            if ( entities.location ) {
+                context.town = 'london';
+                context.speed = '80 Mb/s';
+                context.postcode = encodeURIComponent(entities.location[0].value);
+                delete context.missingPostcode;
+            } else {
+                context.missingPostcode = true;
+            }
+
+            return resolve(context);
+        });
     }
 };
 const bot = (robot) => {
-    const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot, new witHelper.log.Logger(witHelper.log.DEBUG));
+    // const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot, new witHelper.log.Logger(witHelper.log.DEBUG));
+    const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot);
 
     const reg = /(\ *@(.*):\ +(hey)(.*))/i;
 
