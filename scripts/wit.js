@@ -6,7 +6,7 @@ const WIT_TOKEN = 'AUGKNTA4PRJTXBW2EDFXPOXIDCDLM7KJ';
 const actions = {
     say(session, context, message, cb) {
         //res object is attached to the session
-        session.res.reply(message);
+        // session.res.reply(message);
         cb();
     },
     merge(session, context, entities, message, cb) {
@@ -22,8 +22,7 @@ const actions = {
         const { text } = response;
 
         return new Promise(function(resolve) {
-            //res object is attached to the sessionId
-            sessionId.res.reply(text);
+            sessionId.res.send(text);
             return resolve();
         });
     },
@@ -67,15 +66,8 @@ const actions = {
     }
 };
 const bot = (robot) => {
-    // const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot, new witHelper.log.Logger(witHelper.log.DEBUG));
-    const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot);
-
-    const reg = /(\ *@(.*):\ +(hey)(.*))/i;
-
-    witRobot.getMessage = (res) => { //custom getMessage
-        console.log('------' + res);
-        return res.match[3]; //return "you"
-    };
+    const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot, new witHelper.log.Logger(witHelper.log.DEBUG));
+    // const witRobot = new witHelper.Robot(WIT_TOKEN, actions, robot);
 
     witRobot.respond(/(.*)/gi, (err, context, res) => {
         console.log(`[USER] ${witRobot.getMsg(res)}`);
