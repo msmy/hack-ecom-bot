@@ -1,1 +1,1 @@
-web: bin/hubot -a messenger-bot --name noah
+web: bin/hubot -a messenger-bot --name ""

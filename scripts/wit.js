@@ -27,13 +27,9 @@ const actions = {
             return resolve();
         });
     },
-    sendHi(req, res) {
-        const { sessionId } = req;
-        const { text } = res;
-
+    sendHi({context, entities}) {
         return new Promise(function(resolve) {
             //res object is attached to the sessionId
-            sessionId.res.reply(text);
             return resolve();
         });
     },
